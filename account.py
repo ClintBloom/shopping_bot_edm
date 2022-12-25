@@ -21,12 +21,12 @@ _info_file = {
 def check_file():
     if os.path.exists('account.txt'):
         filename = open('account.txt', 'r').read()
-        print('{} Exists!, Ensure you have edited this file!'.format('account.txt'))
+        print('Account.txt Exists!, Ensure you have edited this file!')
         filename = json.loads(filename)
     else:
         filename = open('account.txt', 'w')
-        print('{} has been created!'.format('account.txt'))
+        print('Account.txt has been created!')
         json.dump(_info_file, filename, indent=1)
-        print('Exit program and edit {} before continuing'.format('account.txt'))
+        input('Exit program and edit account.txt before continuing')
         quit()
     return filename
