@@ -11,19 +11,20 @@ from bs4 import BeautifulSoup
 from account import check_file
 from time import sleep
 
-# Selenium Setup
-options = Options()
-options.headless = False
-options.add_argument('users-agent= Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36')
-driver = webdriver.Chrome(service=Service(executable_path='chromedriver.exe'), options=options)
-driver.set_window_size(1920, 1080)
 
-_website = 'Is not allowed'
+# Variables
+options = Options()
+driver = webdriver.Chrome(service=Service(executable_path='chromedriver.exe'), options=options)
+_website = 'https:notallowed.com'
+
+# Selenium Setup
+options.headless = False
+options.add_argument("user-data-dir=C:\\Users\\scott\\AppData\\Local\\Google\\Chrome\\User Data\\Default")
+driver.set_window_size(1920, 1080)
 
 # XPATH Tags
 first_item = '//*[@id="shopify-section-collection-template"]/div[1]/div[1]'
-second_item = '//*[@id="shopify-section-collection-template"]/div[1]/div[2]'
-third_item = '//*[@id="shopify-section-collection-template"]/div[1]/div[3]'
+search_item = '//*[@id="shopify-section-collection-template"]/div[1]/div[5]'
 
 # CSS Selector tags
 tag_items = 'product-item__meta__inner'
@@ -54,8 +55,8 @@ input_card_security = '#verification_value'
 
 def main():
     # Setup
-    item_input_name = ['breacher scout', 'turquoise', 'split']
-    item_to_wait = third_item
+    item_input_name = ['', '', '']
+    item_to_wait = search_item
     file = check_file()
 
     driver.get(_website)
@@ -92,6 +93,7 @@ def main():
             title = product.find_element(By.CLASS_NAME, tag_title).get_attribute('innerText').lower()
             link = product.get_attribute('href')
             sold_out = product.find_element(By.CLASS_NAME, tag_items).get_attribute('innerText').lower()
+
     #        item_dict[title] = link
     # with open('names.txt', 'w') as file:
     #     file.write(json.dumps(item_dict, indent=0))
@@ -104,18 +106,16 @@ def main():
 
     # Goes through keys of dict then gets value to goto item website
     for name in item_dict:
-        if len(item_input_name) >= 2:
-            if item_input_name[1].lower() in name:
-                if len(item_input_name) >= 3:
-                    if item_input_name[2].lower() in name:
-                        print('goto page3', name)
-                        driver.get(item_dict[name])
-                        break
+        if item_input_name[1].lower() in name:
+            if item_input_name[2].lower() in name:
+                print('goto page3', name)
+                driver.get(item_dict[name])
+                break
 
-                    else:
-                        print('goto page2', name)
-                        driver.get(item_dict[name])
-                        break
+            else:
+                print('goto page2', name)
+                driver.get(item_dict[name])
+                break
 
     # Cart Check out phase
     add_cart_element = WebDriverWait(driver, 8).until(EC.element_to_be_clickable((By.CSS_SELECTOR, tag_add_cart)))
